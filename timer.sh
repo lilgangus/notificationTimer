@@ -1,5 +1,4 @@
 # #!/bin/bash
-
 while true
 do
   osascript -e 'display notification "20 miutes have passed, take a break" with title "Timer"'
