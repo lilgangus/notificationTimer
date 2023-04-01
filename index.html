@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Electron Bash Script Runner</title>
+  </head>
+  <body>
+    <h1>Electron Bash Script Runner</h1>
+    <button id="runScript">Run Script</button>
+    <pre id="output"></pre>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      document.getElementById('runScript').addEventListener('click', () => {
+        ipcRenderer.send('runBashScript');
+      });
+
+      ipcRenderer.on('bashOutput', (event, data) => {
+        document.getElementById('output').textContent = data;
+      });
+    </script>
+  </body>
+</html>
