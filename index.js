@@ -6,8 +6,8 @@ let time;
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 350,
+        height: 200,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
