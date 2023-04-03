@@ -2,7 +2,8 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const {exec} = require('child_process');
 
 let scriptRunning = false
-let time;
+let time
+let timerScript
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -13,22 +14,26 @@ function createWindow() {
             contextIsolation: false,
         },
     });
-
-    win.loadFile('index.html');
+    win.loadFile('index.html')
 }
-
-app.whenReady().then(createWindow);
+app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
     // if (process.platform !== 'darwin') {
     //     app.quit();
     // }
     app.quit()
-});
+})
+
+app.on('before-quit', () => {
+    if (timerScript) {
+        timerScript.kill()
+    }
+})
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
+        createWindow()
     }
 });
 
@@ -44,7 +49,7 @@ ipcMain.on('runBashScript', (event) => {
     time = getTime()
     event.sender.send('bashOutput', 'Script Running: ' + time)
 
-    exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
+    timerScript = exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
         scriptRunning = false
         event.sender.send('bashOutput', 'Script Not Running.')
 
@@ -53,13 +58,11 @@ ipcMain.on('runBashScript', (event) => {
         //     event.sender.send('bashOutput', `Error: ${error.message}`)
         //     return;
         // }
-
         // if (stderr) {
         //     console.error(`Stderr: ${stderr}`);
         //     event.sender.send('bashOutput', `Stderr: ${stderr}`)
         //     return;
         // }
-
         // console.log(`Stdout: ${stdout}`);
         // event.sender.send('bashOutput', `Stdout: ${stdout}`)
     });
