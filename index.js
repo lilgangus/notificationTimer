@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const {exec} = require('child_process');
 
 let scriptRunning = false
+let time;
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -35,15 +36,15 @@ ipcMain.on('runBashScript', (event) => {
 
     if (scriptRunning) { 
         // Check if the script is already running
-        event.sender.send('bashOutput', 'Script is already running.')
+        event.sender.send('bashOutput', 'Script is already running.' + time)
         return
     }
 
-    const scriptPath = 'timer.sh'
     scriptRunning = true
-    event.sender.send('bashOutput', 'Script Running.')
+    time = getTime()
+    event.sender.send('bashOutput', 'Script Running: ' + time)
 
-    exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
+    exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
         scriptRunning = false
         event.sender.send('bashOutput', 'Script Not Running.')
 
@@ -63,3 +64,9 @@ ipcMain.on('runBashScript', (event) => {
         // event.sender.send('bashOutput', `Stdout: ${stdout}`)
     });
 });
+
+function getTime() {
+    const date = new Date()
+    const time = date.toLocaleTimeString()
+    return time
+}

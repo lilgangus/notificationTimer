@@ -1,8 +1,8 @@
 # #!/bin/bash
 while true
 do
-  osascript -e 'display notification "20 miutes have passed, take a break" with title "Timer"'
-  osascript -e 'tell application "System Events" to display dialog "Do you want to start the timer again?" with title "Timer" buttons {"OK", "Cancel"} default button 1 giving up after 60' > /dev/null
+  # osascript -e 'display notification "20 miutes have passed, take a break" with title "Timer"'
+  osascript -e 'tell application "System Events" to display dialog "Do you want to start the timer?" with title "Timer" buttons {"OK", "Cancel"} default button 1 giving up after 60' > /dev/null
   button=$(echo $?)
   if(( $button == 0 ))
   then
