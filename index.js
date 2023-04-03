@@ -33,16 +33,17 @@ app.on('activate', () => {
 
 ipcMain.on('runBashScript', (event) => {
 
-    if (scriptRunning) { // Check if the script is already running
+    if (scriptRunning) { 
+        // Check if the script is already running
         event.sender.send('bashOutput', 'Script is already running.')
         return
     }
 
     const scriptPath = 'timer.sh'
     scriptRunning = true
+    event.sender.send('bashOutput', 'Script Running.')
 
     exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
-
         scriptRunning = false
         event.sender.send('bashOutput', 'Script Not Running.')
 
