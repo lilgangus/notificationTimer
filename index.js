@@ -52,19 +52,6 @@ ipcMain.on('runBashScript', (event) => {
     timerScript = exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
         scriptRunning = false
         event.sender.send('bashOutput', 'Script Not Running.')
-
-        // if (error) {
-        //     console.error(`Error: ${error.message}`)
-        //     event.sender.send('bashOutput', `Error: ${error.message}`)
-        //     return;
-        // }
-        // if (stderr) {
-        //     console.error(`Stderr: ${stderr}`);
-        //     event.sender.send('bashOutput', `Stderr: ${stderr}`)
-        //     return;
-        // }
-        // console.log(`Stdout: ${stdout}`);
-        // event.sender.send('bashOutput', `Stdout: ${stdout}`)
     });
 });
 
