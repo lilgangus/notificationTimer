@@ -10,8 +10,11 @@
     <div class="main">
         <h1>20 Minute Timer</h1>
         <div>
-            <button id="runScript" class="btn">
+            <button id="runTimer" class="btn">
                 <span>Start Timer</span>
+            </button>
+            <button id="stopTimer">
+                <span>Stop Timer</span>
             </button>
         </div>  
         <pre id="output"></pre>
@@ -19,18 +22,38 @@
 
     <script>
         const {ipcRenderer} = require('electron');
+        
+        stopButton = document.getElementById('stopTimer');
+        startButton = document.getElementById('runTimer');
 
-        document.getElementById('runScript').addEventListener('click', () => {
-            ipcRenderer.send('runBashScript');
+        setStopButtonToDisabled()
+
+        startButton.addEventListener('click', () => {
+            ipcRenderer.send('runBashScript')
+            ipcRenderer.send('startTimer')
+            setStopButtonToNotDisabled()
         });
 
         ipcRenderer.on('bashOutput', (event, data) => {
             document.getElementById('output').textContent = data;
         });
+
+        function setStopButtonToDisabled(){
+            stopButton.classList.remove('btn')
+            stopButton.classList.add('btnDisabled')
+            document.getElementById('output').textContent = stopButton.disabled
+        }
+
+        function setStopButtonToNotDisabled() {
+            stopButton.classList.remove('btnDisabled')
+            stopButton.classList.add('btn')
+            document.getElementById('output').textContent = stopButton.disabled
+        }
     </script>
 </body>
 
 <style>
+
     .main {
         width: 100%;
         height: 100%;
@@ -38,6 +61,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        font-family: 'Courier New'
     }
 
     .btn {
@@ -46,8 +70,20 @@
         line-height: 42px;
         padding: 0;
         border: none;
+        border: 1px solid #f0094a;
         background: rgb(255, 27, 0);
-        background: linear-gradient(0deg, rgba(255, 27, 0, 1) 0%, rgba(251, 75, 2, 1) 100%);
+        color: #000000;
+        /* background: linear-gradient(0deg, rgba(255, 27, 0, 1) 0%, rgba(251, 75, 2, 1) 100%); */
+    }
+
+    .btnDisabled {
+        width: 130px;
+        height: 40px;
+        line-height: 42px;
+        padding: 0;
+        border: 1px solid #f0094a;
+        background: rgb(255, 255, 255);
+        color:  #f0094a;
     }
 
     .btn:hover {

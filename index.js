@@ -15,13 +15,19 @@ function createWindow() {
         },
     });
     win.loadFile('index.html')
+
+    setInterval(() => {
+        win.show()
+        win.focus()
+    }, 10000)
 }
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
-    // if (process.platform !== 'darwin') {
-    //     app.quit();
-    // }
+    //this is to close for nonmacos
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
     app.quit()
 })
 
