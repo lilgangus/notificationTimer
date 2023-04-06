@@ -1,12 +1,14 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const {exec} = require('child_process');
+const { clearInterval } = require('timers');
 
-let scriptRunning = false
+let timerRunning = false
 let time
+let win
 let timerScript
 
 function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 350,
         height: 200,
         webPreferences: {
@@ -15,14 +17,11 @@ function createWindow() {
         },
     });
     win.loadFile('index.html')
-
-    setInterval(() => {
-        win.show()
-        win.focus()
-    }, 10000)
 }
+
 app.whenReady().then(createWindow)
 
+//this quits application when closed
 app.on('window-all-closed', () => {
     //this is to close for nonmacos
     if (process.platform !== 'darwin') {
@@ -31,9 +30,10 @@ app.on('window-all-closed', () => {
     app.quit()
 })
 
+//maybe we should use beforeunload instead of before-quite
 app.on('before-quit', () => {
-    if (timerScript) {
-        timerScript.kill()
+    if (timerRunning) {
+        clearInterval(timerScript)
     }
 })
 
@@ -43,23 +43,48 @@ app.on('activate', () => {
     }
 });
 
-ipcMain.on('runBashScript', (event) => {
+// ipcMain.on('runBashScript', (event) => {
 
-    if (scriptRunning) { 
-        // Check if the script is already running
-        event.sender.send('bashOutput', 'Script is already running.' + time)
+//     if (scriptRunning) { 
+//         return
+//     }
+
+//     scriptRunning = true
+//     time = getTime()
+//     event.sender.send('output', 'Script Running: ' + time)
+
+//     timerScript = exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
+//         scriptRunning = false
+//         event.sender.send('output', 'Timer Not Running.')
+//     });
+// });
+
+ipcMain.on('startTimer', (e) => {
+    if (timerRunning) { 
         return
     }
 
-    scriptRunning = true
+    timerRunning = true
+    
     time = getTime()
-    event.sender.send('bashOutput', 'Script Running: ' + time)
+    e.sender.send('output', 'Timer Running: ' + time)
+    
+    //every 21 minutes we show/focus the window and update the timer start time
+    timerScript = setInterval(() => {
+        win.show()
+        win.focus()
+        time = getTime()
+        //we could use a function to continuously send the time until alarm goes off
+        e.sender.send('output', 'Timer Running: ' + time)
+    }, 10000)
 
-    timerScript = exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
-        scriptRunning = false
-        event.sender.send('bashOutput', 'Timer Not Running.')
-    });
-});
+})
+
+ipcMain.on('stopTimer', (e) => {
+    clearInterval(timerScript)
+    e.sender.send('output', 'Timer Not Running.')
+    timerRunning = false
+})
 
 function getTime() {
     const date = new Date()

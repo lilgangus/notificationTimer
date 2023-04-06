@@ -10,7 +10,7 @@
     <div class="main">
         <h1>20 Minute Timer</h1>
         <div>
-            <button id="runTimer" class="btn">
+            <button id="runTimer">
                 <span>Start Timer</span>
             </button>
             <button id="stopTimer">
@@ -27,29 +27,37 @@
         startButton = document.getElementById('runTimer');
         text = document.getElementById('output')
 
-        setStopButtonToDisabled()
+        setButtonToDisabled(stopButton)
+        setButtonToNotDisabled(startButton)
 
         startButton.addEventListener('click', () => {
-            ipcRenderer.send('runBashScript')
             ipcRenderer.send('startTimer')
-            setStopButtonToNotDisabled()
-        });
+            setButtonToNotDisabled(stopButton)
+            setButtonToDisabled(startButton)
+        })
 
-        ipcRenderer.on('bashOutput', (event, data) => {
-            if(data == 'Timer Not Running.'){
-                setStopButtonToDisabled()
-            }
+        stopButton.addEventListener('click', () => {
+            ipcRenderer.send('stopTimer')
+            setButtonToDisabled(stopButton)
+            setButtonToNotDisabled(startButton)
+        })
+
+        ipcRenderer.on('output', (event, data) => {
+            // if(data == 'Timer Not Running.'){
+            //     setButtonToDisabled(stopButton)
+            //     setButtonToNotDisabled(startButton)
+            // }
             text.textContent = data
         });
 
-        function setStopButtonToDisabled(){
-            stopButton.classList.remove('btn')
-            stopButton.classList.add('btnDisabled')
+        function setButtonToDisabled(button){
+            button.classList.remove('btn')
+            button.classList.add('btnDisabled')
         }
 
-        function setStopButtonToNotDisabled() {
-            stopButton.classList.remove('btnDisabled')
-            stopButton.classList.add('btn')
+        function setButtonToNotDisabled(button) {
+            button.classList.remove('btnDisabled')
+            button.classList.add('btn')
         }
     </script>
 </body>
