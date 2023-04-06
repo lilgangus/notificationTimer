@@ -25,6 +25,7 @@
         
         stopButton = document.getElementById('stopTimer');
         startButton = document.getElementById('runTimer');
+        text = document.getElementById('output')
 
         setStopButtonToDisabled()
 
@@ -35,19 +36,20 @@
         });
 
         ipcRenderer.on('bashOutput', (event, data) => {
-            document.getElementById('output').textContent = data;
+            if(data == 'Timer Not Running.'){
+                setStopButtonToDisabled()
+            }
+            text.textContent = data
         });
 
         function setStopButtonToDisabled(){
             stopButton.classList.remove('btn')
             stopButton.classList.add('btnDisabled')
-            document.getElementById('output').textContent = stopButton.disabled
         }
 
         function setStopButtonToNotDisabled() {
             stopButton.classList.remove('btnDisabled')
             stopButton.classList.add('btn')
-            document.getElementById('output').textContent = stopButton.disabled
         }
     </script>
 </body>

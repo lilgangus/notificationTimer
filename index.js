@@ -57,7 +57,7 @@ ipcMain.on('runBashScript', (event) => {
 
     timerScript = exec(`bash ${'timer.sh'}`, (error, stdout, stderr) => {
         scriptRunning = false
-        event.sender.send('bashOutput', 'Script Not Running.')
+        event.sender.send('bashOutput', 'Timer Not Running.')
     });
 });
 
