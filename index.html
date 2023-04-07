@@ -21,10 +21,11 @@
     </div>
 
     <script>
-        const {ipcRenderer} = require('electron');
+        const {ipcRenderer} = require('electron')
+        let autoTimer
         
-        stopButton = document.getElementById('stopTimer');
-        startButton = document.getElementById('runTimer');
+        stopButton = document.getElementById('stopTimer')
+        startButton = document.getElementById('runTimer')
         text = document.getElementById('output')
 
         setButtonToDisabled(stopButton)
@@ -40,6 +41,8 @@
             ipcRenderer.send('stopTimer')
             setButtonToDisabled(stopButton)
             setButtonToNotDisabled(startButton)
+            startButton.innerHTML = "Start Timer"
+            clearTimeout(autoTimer)
         })
 
         ipcRenderer.on('output', (event, data) => {
@@ -48,7 +51,16 @@
             //     setButtonToNotDisabled(startButton)
             // }
             text.textContent = data
-        });
+        })
+
+        ipcRenderer.on('acknowledge', (event, data) => {
+            startButton.innerHTML = "OK"
+            setButtonToNotDisabled(startButton)
+            autoTimer = setTimeout(() => {
+                setButtonToDisabled(startButton)
+                ipcRenderer.send('startTimer')
+            },6000)
+        })
 
         function setButtonToDisabled(button){
             button.classList.remove('btn')
