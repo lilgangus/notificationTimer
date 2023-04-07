@@ -59,7 +59,7 @@
             autoTimer = setTimeout(() => {
                 setButtonToDisabled(startButton)
                 ipcRenderer.send('startTimer')
-            },6000)
+            },60000)
         })
 
         function setButtonToDisabled(button){
