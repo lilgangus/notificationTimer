@@ -31,12 +31,14 @@
         setButtonToDisabled(stopButton)
         setButtonToNotDisabled(startButton)
 
+        //when we click the start button, we send a message to the backend to start the timer and disable the start button/enable the stop button
         startButton.addEventListener('click', () => {
             ipcRenderer.send('startTimer')
             setButtonToNotDisabled(stopButton)
             setButtonToDisabled(startButton)
         })
 
+        //when we click the stop button, we send a message to the backend to stop the timer and disable the stop button/enable the start button. We also clear the auto restart of the timer
         stopButton.addEventListener('click', () => {
             ipcRenderer.send('stopTimer')
             setButtonToDisabled(stopButton)
@@ -45,14 +47,12 @@
             clearTimeout(autoTimer)
         })
 
+        //We just display the output from the backend (such as time the timer started or whether the timer is running or not)
         ipcRenderer.on('output', (event, data) => {
-            // if(data == 'Timer Not Running.'){
-            //     setButtonToDisabled(stopButton)
-            //     setButtonToNotDisabled(startButton)
-            // }
             text.textContent = data
         })
 
+        //we turn the start timer into an acknowledge button when the timer finishes and we set a timeout to auto restart the timer
         ipcRenderer.on('acknowledge', (event, data) => {
             startButton.innerHTML = "OK"
             setButtonToNotDisabled(startButton)
