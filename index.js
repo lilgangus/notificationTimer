@@ -3,7 +3,7 @@ const {exec} = require('child_process');
 const { clearInterval } = require('timers');
 
 let timerRunning = false
-let time
+// let time
 let win
 let timerScript
 
@@ -60,14 +60,15 @@ app.on('activate', () => {
 // });
 
 ipcMain.on('startTimer', (e) => {
+
     if (timerRunning) { 
         return
     }
 
     timerRunning = true
     
-    time = getTime()
-    e.sender.send('output', 'Timer Running: ' + time)
+    // time = getTime()
+    e.sender.send('output', 'Timer Running: ' + getTime())
     
     //every 21 minutes we show/focus the window and update the timer start time
     timerScript = setInterval(() => {
@@ -75,7 +76,7 @@ ipcMain.on('startTimer', (e) => {
         win.focus()
         time = getTime()
         //we could use a function to continuously send the time until alarm goes off
-        e.sender.send('output', 'Timer Running: ' + time)
+        e.sender.send('output', 'Timer Running: ' + getTime())
     }, 10000)
 
 })
