@@ -36,6 +36,7 @@
             ipcRenderer.send('startTimer')
             setButtonToNotDisabled(stopButton)
             setButtonToDisabled(startButton)
+            clearTimeout(autoTimer)
         })
 
         //when we click the stop button, we send a message to the backend to stop the timer and disable the stop button/enable the start button. We also clear the auto restart of the timer
