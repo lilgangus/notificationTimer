@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
-
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,7 @@
   },
   "homepage": "https://github.com/lilgangus/cliNotificationTimer#readme",
   "dependencies": {
-    "electron": "^23.2.1"
+    "electron": "^23.2.1",
+    "electron-builder": "^23.6.0"
   }
 }
