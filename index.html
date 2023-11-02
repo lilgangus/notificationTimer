@@ -53,7 +53,7 @@
             text.textContent = data
         })
 
-        //we turn the start timer into an acknowledge button when the timer finishes and we set a timeout to auto restart the timer
+        //we turn the start timer into an acknowledge button when the timer finishes and we set a timeout of 60 seconds to auto restart the timer if the user doesnt respond
         ipcRenderer.on('acknowledge', (event, data) => {
             startButton.innerHTML = "OK"
             setButtonToNotDisabled(startButton)
